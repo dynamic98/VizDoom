@@ -16,7 +16,7 @@ import pandas as pd
 import time
 import numpy as np
 
-DEFAULT_CONFIG = os.path.join("../../scenarios/", "deathmatch.cfg")
+DEFAULT_CONFIG = os.path.join("../../scenarios/", "experiment.cfg")
 
 if __name__ == "__main__":
     parser = ArgumentParser("ViZDoom example showing how to use SPECTATOR mode.")
@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     game.load_config(args.config)
     filepath='../../'
-    heads = ['time', 'timestamp', 'ATTACK', 'SPEED', 'STRAFE', 'MOVE_RIGHT', 'MOVE_LEFT', 'MOVE_BACKWARD', 'MOVE_FORWARD', 'TURN_RIGHT', 'TURN_LEFT', 'USE', 'SELECT_WEAPON1', 'SELECT_WEAPON2', 'SELECT_WEAPON3', 'SELECT_WEAPON4', 'SELECT_WEAPON5', 'SELECT_WEAPON6', 'SELECT_NEXT_WEAPON', 'SELECT_PREV_WEAPON', 'LOOK_UP_DOWN_DELTA', 'TURN_LEFT_RIGHT_DELTA', 'MOVE_LEFT_RIGHT_DELTA', 'KILLCOUNT', 'HEALTH', 'ARMOR', 'SELECTED_WEAPON', 'SELECTED_WEAPON_AMMO']
+    heads = ['time', 'timestamp', 'ATTACK', 'SPEED', 'STRAFE', 'MOVE_RIGHT', 'MOVE_LEFT', 'MOVE_BACKWARD', 'MOVE_FORWARD', 'TURN_RIGHT', 'TURN_LEFT','USE', 'SELECT_WEAPON1', 'SELECT_WEAPON2', 'SELECT_WEAPON3', 'SELECT_WEAPON4', 'SELECT_WEAPON5', 'SELECT_WEAPON6', 'SELECT_NEXT_WEAPON', 'SELECT_PREV_WEAPON', 'LOOK_UP_DOWN_DELTA', 'TURN_LEFT_RIGHT_DELTA', 'MOVE_LEFT_RIGHT_DELTA', 'KILLCOUNT', 'HEALTH', 'ARMOR', 'SELECTED_WEAPON', 'SELECTED_WEAPON_AMMO']
     # Enables freelook in engine
     game.add_game_args("+freelook 1")
 
