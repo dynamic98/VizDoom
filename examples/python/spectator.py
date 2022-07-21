@@ -77,8 +77,6 @@ if __name__ == "__main__":
             var = np.concatenate(([now], [elp_time], last_action, variables), axis=0)
             new_df = pd.DataFrame([var], columns=heads)
             
-            print('data : ',data)
-            print('df : ',new_df)
             data = pd.concat([data, new_df], ignore_index=True)
 
             print("State #" + str(state.number))
