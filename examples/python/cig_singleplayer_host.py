@@ -12,7 +12,7 @@ from time import sleep
 import vizdoom as vzd
 from oblige import *
 
-game = DoomGame()
+game = vzd.DoomGame()
 
 # Use your config
 game.load_config(os.path.join(vzd.scenarios_path, "cig.cfg"))
@@ -56,7 +56,7 @@ game.add_game_args("+viz_spectator 1")
 
 # Sets up game for spectator (you)
 game.add_game_args("+freelook 1")
-game.set_screen_resolution(ScreenResolution.RES_640X480)
+game.set_screen_resolution(vzd.ScreenResolution.RES_640X480)
 game.set_window_visible(True)
 #game.set_mode(Mode.SPECTATOR)
 game.set_mode(vzd.Mode.ASYNC_SPECTATOR)
