@@ -13,11 +13,14 @@ game = vzd.DoomGame()
 
 # Use CIG example config or your own.
 # game.load_config(os.path.join(vzd.scenarios_path, "cig.cfg"))
-scenarios_path = 'C:\\Users\\sci2019\\Game_Project\\VizDoom\\scenarios'
-game.load_config(os.path.join(scenarios_path, "deathmatch_multi.cfg"))
+# game.load_config(os.path.join("../scenarios", "cig.cfg"))
+game.load_config(os.path.join("./scenarios", "deathmatch.cfg"))
+# game.load_config(os.path.join("./scenarios", "deathmatch.cfg"))
+# game.load_config(os.path.join(vzd.scenarios_path, "deathmatch.cfg"))
+# game.load_config(os.path.join("../scenarios/", "deathmatch.cfg"))
 
 
-game.set_doom_map("map01")  # Limited deathmatch.
+# game.set_doom_map("map01")  # Limited deathmatch.
 #game.set_doom_map("map02")  # Full deathmatch.
 
 # Join existing game.
@@ -29,6 +32,7 @@ game.add_game_args("+name AI +colorset 0")
 
 # During the competition, async mode will be forced for all agents.
 #game.set_mode(Mode.PLAYER)
+# game.set_mode(vzd.Mode.ASYNC_PLAYER)/
 game.set_mode(vzd.Mode.ASYNC_SPECTATOR)
 
 #game.set_window_visible(False)
@@ -52,9 +56,9 @@ while not game.is_episode_finished():
 
     # Make your action.
     # game.make_action(choice(actions))
-    # game.make_action()
-    game.advance_action()
+    game.make_action([])
     frags = game.get_game_variable(vzd.GameVariable.FRAGCOUNT)
+    
     if frags != last_frags:
         last_frags = frags
         print("Player " + str(player_number) + " has " + str(frags) + " frags.")

@@ -30,8 +30,8 @@ game.add_game_args("-host 2 "
                    "+sv_respawnprotect 1 "    # Players will be invulnerable for two second after spawning.
                    "+sv_spawnfarthest 1 "     # Players will be spawned as far as possible from any other players.
                    "+sv_nocrouch 1 "          # Disables crouching.
-                   "+viz_respawn_delay 10 "   # Sets delay between respawns (in seconds, default is 0).
-                   "+viz_nocheat 1")          # Disables depth and labels buffer and the ability to use commands that could interfere with multiplayer game.
+                   "+viz_respawn_delay 1 "   # Sets delay between respawns (in seconds, default is 0).
+                   "+viz_nocheat 0")          # Disables depth and labels buffer and the ability to use commands that could interfere with multiplayer game.
 
 # This can be used to host game without taking part in it (can be simply added as argument of vizdoom executable).
 #game.add_game_args("+viz_spectator 1")
@@ -42,7 +42,9 @@ game.add_game_args("+name Host +colorset 0")
 
 # During the competition, async mode will be forced for all agents.
 #game.set_mode(vzd.Mode.PLAYER)
-game.set_mode(vzd.Mode.ASYNC_PLAYER)
+# game.set_mode(vzd.Mode.ASYNC_PLAYER)
+# game.set_mode(vzd.Mode.SPECTATOR)
+game.set_mode(vzd.Mode.ASYNC_SPECTATOR)
 
 #game.set_window_visible(False)
 
@@ -60,7 +62,10 @@ while not game.is_episode_finished():
     # Analyze the state.
 
     # Make your action.
-    game.make_action(choice(actions))
+    game.advance_action()
+    # 이거 있어야 조작 가능
+    # game.make_action(choice(actions))
+    # game.make_action()
 
     # Check if player is dead
     if game.is_player_dead():

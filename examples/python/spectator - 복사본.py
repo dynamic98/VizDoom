@@ -26,14 +26,14 @@ if __name__ == "__main__":
                         help="Path to the configuration file of the scenario."
                              " Please see "
                              "../../scenarios/*cfg for more scenarios.")
-    # parser.add_argument("-n", "--name",
-    #                     dest="name",
-    #                     default=None,
-    #                     type=str)
+    parser.add_argument("-n", "--name",
+                        dest="name",
+                        default=None,
+                        type=str)
 
     args = parser.parse_args()
 
-    # assert args.name is not None, 'name please'
+    assert args.name is not None, 'name please'
 
     game = vzd.DoomGame()
     
@@ -89,6 +89,6 @@ if __name__ == "__main__":
         print("Total reward:", game.get_total_reward())
         print("************************")
         sleep(2.0)
-        # data.to_csv(filepath + str(start_time) + '_' + args.name + '_res.csv', index=False)
+        data.to_csv(filepath + str(start_time) + '_' + args.name + '_res.csv', index=False)
 
     game.close()

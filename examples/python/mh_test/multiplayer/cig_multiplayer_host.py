@@ -8,13 +8,19 @@ import os
 from random import choice
 import vizdoom as vzd
 
+
 game = vzd.DoomGame()
 
 # Use CIG example config or your own.
-scenarios_path = 'C:\\Users\\sci2019\\Game_Project\\VizDoom\\scenarios'
-game.load_config(os.path.join(scenarios_path, "deathmatch_multi.cfg"))
 
-game.set_doom_map("map01")  # Limited deathmatch.
+# game.load_config(os.path.join("./scenarios", "deathmatch.cfg"))
+game.load_config(os.path.join(vzd.scenarios_path, "cig.cfg"))
+# game.load_config(os.path.join(vzd.scenarios_path, "deathmatch.cfg"))
+# game.load_config(os.path.join("../scenarios/", "deathmatch.cfg"))
+
+
+
+# game.set_doom_map("map01")  # Limited deathmatch.
 #game.set_doom_map("map02")  # Full deathmatch.
 
 # Host game with options that will be used in the competition.
@@ -23,7 +29,7 @@ game.add_game_args("-host 2 "
                    # It will wait for other machines to connect using the -join parameter and then start the game when everyone is connected.
                    "-port 5029 "              # Specifies the port (default is 5029).
                    "+viz_connect_timeout 60 " # Specifies the time (in seconds), that the host will wait for other players (default is 60).
-                   "-deathmatch "             # Deathmatch rules are used for the game.
+                #    "-deathmatch "             # Deathmatch rules are used for the game.
                    "+timelimit 10.0 "         # The game (episode) will end after this many minutes have elapsed.
                    "+sv_forcerespawn 1 "      # Players will respawn automatically after they die.
                    "+sv_noautoaim 1 "         # Autoaim is disabled for all players.
@@ -42,7 +48,7 @@ game.add_game_args("+name Host +colorset 0")
 
 # During the competition, async mode will be forced for all agents.
 #game.set_mode(vzd.Mode.PLAYER)
-game.set_mode(vzd.Mode.ASYNC_PLAYER)
+game.set_mode(vzd.Mode.ASYNC_SPECTATOR)
 
 #game.set_window_visible(False)
 
@@ -60,7 +66,8 @@ while not game.is_episode_finished():
     # Analyze the state.
 
     # Make your action.
-    game.make_action(choice(actions))
+    # game.make_action(choice(actions))
+    game.advance_action() # 이거 있어야 조작 가능
 
     # Check if player is dead
     if game.is_player_dead():
