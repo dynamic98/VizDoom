@@ -152,16 +152,24 @@ while not game.is_episode_finished():
     # if i%50 == 0:
     # print("%d, %d"%(stateData.get_object(stateData.get_player_id()).position_x, stateData.get_object(stateData.get_player_id()).position_y))
     stateData = StateData2(game.get_state())
-
+    state = game.get_state()
     action_order_sheet = aimActioner.make_action(stateData)
     action_order_sheet = attackActioner.make_action(stateData, action_order_sheet=action_order_sheet)
     action_order_sheet = moveActionerList[idx].make_action(stateData, action_order_sheet=action_order_sheet)
     # print(make_into_doom_action(action_order_sheet))
+    GameVariable = state.game_variables
     player_count = 0
-    for i in game.get_state().objects:
-        if i.name == 'DoomPlayer':
-            player_count += 1
-    print(player_count)
+    for i in state.labels:
+        x, y, z = i.object_position_x, i.object_position_y, i.object_position_z
+        if (int(x)==int(GameVariable[0]))&(int(y)==int(GameVariable[1]))&(int(z)==int(GameVariable[2])):
+            print("it is self-player")
+        # gx, gy, gz = GameVariable.POSITION_X, GameVariable.POSITION_Y, GameVariable.POSITION_Z
+        # print(x,gx, '  ', y,gy, '  ', z,gz)
+        # print(i.object_name, i.object_id, i.x, i.y, i.width, i.height)
+        # if i.name == 'DoomPlayer':
+        #     print(i.name, i.id, i.position_x, i.position_y)
+            # player_count += 1
+    # print(player_count)
     game.make_action(make_into_doom_action(action_order_sheet))
     if moveActionerList[idx].is_finished(stateData):
         idx = (idx + 1) % len(moveActionerList)

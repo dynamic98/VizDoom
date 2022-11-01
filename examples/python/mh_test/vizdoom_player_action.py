@@ -139,23 +139,6 @@ class AimActioner(AbstractActioner):
         else:
             action_order_sheet[PlayerAction.rotateX] = 50 * dist/(1920/2)/2 + math.sin(time()*10)
         
-
-
-    # def see_brightest(self, stateData: StateData2, action_order_sheet: PlayerAction):
-    #     buffer = self.game.get_state().depth_buffer
-    #     l = []
-    #     for i in range(500, 1601, 10):
-    #         l.append(buffer[600][i])
-
-    #     print(sum(l)/len(l))
-
-    #     if sum(l)/len(l) <= 10:
-    #         dist = 500 + l.index(max(l))*100 - 1920/2
-    #         action_order_sheet[PlayerAction.rotateX] = 50 * dist/(1920/2)/2
-    #         return True
-        
-    #     return False
-
     def doridori(self, stateData: StateData2, action_order_sheet: PlayerAction):
         
         # if self.see_brightest(stateData, action_order_sheet):
@@ -192,35 +175,6 @@ class AttackActioner(AbstractActioner):
             return
         print("False")
 
-
-# class SmoothRotateTo(AbstractActioner):
-#     def __init__(self, game, angle):
-#         self.game = game
-#         self.angle = angle
-
-#     def add_action(self):
-#         player_angle = get_player(self.game).angle
-        
-#         if abs(player_angle - self.angle) < 5: # 원하는 각도와 별 차이 없으면
-#             return True
-
-#         player_angle = (player_angle%360)-180
-#         target_angle = (self.angle%360)-180
-
-#         angle_dist = target_angle - player_angle
-        
-#         if angle_dist < 0: # 반시계 방향으로 돌 것인가?
-#             how_to_rotate = -min(3, abs(angle_dist))
-#         else:
-#             how_to_rotate = min(3, abs(angle_dist))
-
-#         self.game.make_action(make_into_doom_action({
-#                 PlayerAction.rotateX: -how_to_rotate
-#         }))
-
-
-#         return False
-
 class Section(IntEnum):
     Center = 0,
     Top = 1,
@@ -239,26 +193,6 @@ class MoveToActioner(AbstractActioner):
         self.target_pos = target_pos
 
     def add_action(self, stateData: StateData2, action_order_sheet: PlayerAction):
-        # if time() % 1 <0.2:
-
-        #     if int(time())%2 == 0:
-        #         # print("Right")
-        #         action_order_sheet[PlayerAction.MoveRight] = 1
-        #         return
-
-        #     elif int(time())%2 == 1:
-        #         # print("Left")
-        #         action_order_sheet[PlayerAction.MoveLeft] = 1
-        #         return
-                
-            # elif int(time())%4 == 0:        
-            #     print("Front")
-            #     action_order_sheet[PlayerAction.MoveFront] = 1
-            #     return
-            # elif int(time())%4 == 3:
-            #     print("Back")
-            #     action_order_sheet[PlayerAction.MoveBack] = 1
-            #     return
 
         player = stateData.get_object(stateData.get_player_id())
         x = int(player.position_x)
@@ -299,9 +233,6 @@ class MoveToActioner(AbstractActioner):
         # player_angle = StateData(self.game.get_state()).player.object.angle/
         # print(direct_destination_angle, player_angle)
         relative_angle = ((direct_destination_angle-player_angle) + 360)%360 # 플레이어 기준에서 어느 방향으로 움직여야 하는가?
-        # print(y, x, self.target_pos[0], self.target_pos[1])
-        # print(destination_angle)
-        # print(relative_angle)
         direction = self.get_direction_from_angle(relative_angle)
 
         
@@ -312,14 +243,6 @@ class MoveToActioner(AbstractActioner):
         front = True if direction[1] == 1 else False # xy좌표평면과 컴퓨터가 인식하는 y는 방향이 반대
         back  = True if direction[1] == -1 else False
         
-        # print(self.get_angle_from_direction())
-
-
-        # angle = 0
-        # if keyboard.is_pressed("a"):    
-        #     angle = -5
-        # elif keyboard.is_pressed("d"):
-        #     angle = 5
 
         action_order_sheet[PlayerAction.Run] = True
         action_order_sheet[PlayerAction.MoveFront] = front
@@ -378,11 +301,8 @@ class MoveToActioner(AbstractActioner):
         for i, d in enumerate(direction_list):
             if cur_d == d:
                 return i * 45
-            
         return 0
 
-        # print("d는?? " + str(cur_d))
-        # print(d == (1, -1))
         
     def get_direction_from_angle(self, angle): # 플레이어 기준으로 angle방향으로 이동하기 위한 (좌우, 앞뒤) 이동 여부를 반환
         direction_list = [(0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0), (1, 1)]
