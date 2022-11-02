@@ -27,48 +27,58 @@ class PlayerAction(IntEnum):
     MoveFront = 6
     TurnRight = 7
     TurnLeft = 8
-    weapone1 = 9
-    weapone2 = 10
-    weapone3 = 11
-    weapone4 = 12
-    weapone5 = 13
-    weapone6 = 14
-    f = 15
-    e = 16
-    rotateY = 17
-    rotateX = 18
+    Use = 9
+    weapone1 = 10
+    weapone2 = 11
+    weapone3 = 12
+    weapone4 = 13
+    weapone5 = 14
+    weapone6 = 15
+
+    SELECT_NEXT_WEAPON = 16
+    SELECT_PREV_WEAPON = 17
+
+    pitch = 18
+    rotateY = 19
+    rotateX = 20
 
 def make_empty_action_order_sheet(): # action 누적을 위한 자료구조
     return {
         PlayerAction.Atack : 0,
         PlayerAction.Run : 0,
         PlayerAction.b : 0,
+
         PlayerAction.MoveRight : 0,
         PlayerAction.MoveLeft : 0,
         PlayerAction.MoveBack : 0,
         PlayerAction.MoveFront : 0,
         PlayerAction.TurnRight : 0,
         PlayerAction.TurnLeft : 0,
+        PlayerAction.Use : 0,
+
         PlayerAction.weapone1 : 0,
         PlayerAction.weapone2 : 0,
         PlayerAction.weapone3 : 0,
         PlayerAction.weapone4 : 0,
         PlayerAction.weapone5 : 0,
         PlayerAction.weapone6 : 1,
-        PlayerAction.f : 0,
-        PlayerAction.e : 0,
-        PlayerAction.rotateX : 0,
-        PlayerAction.rotateY : 0
+
+
+        PlayerAction.SELECT_NEXT_WEAPON : 0,
+        PlayerAction.SELECT_PREV_WEAPON : 0,
+
+        PlayerAction.pitch : 0,
+        PlayerAction.rotateY : 0,
+        PlayerAction.rotateX : 0
     }
 
+
 def make_into_doom_action(action_dict): # action_order를 doom 전용 action으로 표현
-    action = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    action = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # action = [0 for i in range(len(action_dict.keys()))]
     for key in action_dict.keys():
         action[key] = action_dict[key]
     return action
-
-
-
 
 # class DeathmatchAction:
 #     def set_angle(stateData, angle):
@@ -244,7 +254,7 @@ class MoveToActioner(AbstractActioner):
         back  = True if direction[1] == -1 else False
         
 
-        action_order_sheet[PlayerAction.Run] = True
+        action_order_sheet[PlayerAction.Run] = False
         action_order_sheet[PlayerAction.MoveFront] = front
         action_order_sheet[PlayerAction.MoveBack] = back
         action_order_sheet[PlayerAction.MoveRight] = right
