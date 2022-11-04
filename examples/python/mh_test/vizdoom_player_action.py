@@ -192,6 +192,20 @@ class Section(IntEnum):
     Left = 3,
     Bottom = 4
 
+    CenterTop = 5
+    CenterLeft = 6
+    CenterBottom = 7
+    CenterRight = 8
+    TopLeft = 9
+    TopRight = 10
+    LeftTop = 11
+    LeftBottom = 12
+    BottomLeft = 13
+    BottomRight = 14
+    RightTop = 15
+    RightBottom = 16
+
+
 
 class MoveToActioner(AbstractActioner):
     
@@ -351,11 +365,36 @@ class MoveToSectionActioner(MoveToPositionActioner):
     def get_target_pos(section): # (x, y)
         if section == Section.Center:
             return (600, 600)
-        if section == Section.Top:
+        elif section == Section.Top:
             return (660, 1250)
-        if section == Section.Bottom:
+        elif section == Section.Bottom:
             return (660, -150)
-        if section == Section.Right:
+        elif section == Section.Right:
             return (1250, 600)
-        if section == Section.Left:
+        elif section == Section.Left:
             return (-150, 600)
+
+        elif section == Section.CenterTop:
+            return (500,800)
+        elif section == Section.CenterLeft:
+            return (150,500)
+        elif section == Section.CenterBottom:
+            return (500,150)            
+        elif section == Section.CenterRight:
+            return (800,500)        
+        elif section == Section.TopLeft:
+            return (50,1250)
+        elif section == Section.TopRight:
+            return (940,1250)
+        elif section == Section.LeftTop:
+            return (-220,940)
+        elif section == Section.LeftBottom:
+            return (-220,50)
+        elif section == Section.BottomLeft:
+            return (50,-220)
+        elif section == Section.BottomRight:
+            return (940,-220)
+        elif section == Section.RightTop:
+            return (1200,940)
+        elif section == Section.RightBottom:
+            return (1200,50)

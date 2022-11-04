@@ -102,7 +102,8 @@ game.add_game_args("+name AI +colorset 0")
 game.set_mode(vzd.Mode.ASYNC_PLAYER)
 # game.set_mode(vzd.Mode.ASYNC_SPECTATOR)
 
-#game.set_window_visible(False)
+# game.set_window_visible(False)
+
 game.set_objects_info_enabled(True)
 game.set_sectors_info_enabled(True)
 game.set_labels_buffer_enabled(True)
@@ -124,7 +125,7 @@ game.add_available_game_variable(vzd.GameVariable.AMMO6)
 actions = [[True, False, False], [False, True, False], [False, False, True]]
 
 game.init()
-myDoomFSM = Doom_FSM(game)
+myDoomFSM = Doom_FSM(game, playstyle='aggressive')
 # Three example sample actions
 # actions = [[1,0,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0,0],[0,0,1,0,0,0,0,0,0]]
 
@@ -132,18 +133,9 @@ myDoomFSM = Doom_FSM(game)
 player_number = int(game.get_game_variable(vzd.GameVariable.PLAYER_NUMBER))
 last_frags = 0
 
-aimActioner = AimActioner(game)
-attackActioner = AttackActioner(game)
-moveActionerList = [
-    MoveToSectionActioner(game, Section.Top),
-    MoveToSectionActioner(game, Section.Right),
-    MoveToSectionActioner(game, Section.Center),
-    MoveToSectionActioner(game, Section.Right),
-    MoveToSectionActioner(game, Section.Bottom),
-    MoveToSectionActioner(game, Section.Left),
-    MoveToSectionActioner(game, Section.Center),
-    MoveToSectionActioner(game, Section.Left)
-]
+# aimActioner = AimActioner(game)
+# attackActioner = AttackActioner(game)
+# moveActionerList = []
 
 
 # # Play until the game (episode) is over.
@@ -155,40 +147,12 @@ moveActionerList = [
 # attackActioner = AttackActioner(game)
 idx = 0
 while not game.is_episode_finished():
-    # i+=1
-    # if i%50 == 0:
-    # print("%d, %d"%(stateData.get_object(stateData.get_player_id()).position_x, stateData.get_object(stateData.get_player_id()).position_y))
-    stateData = StateData2(game.get_state())
+    
     state = game.get_state()
     myDoomFSM.updateState(state)
 
-
-    action_order_sheet = aimActioner.make_action(stateData)
-    action_order_sheet = attackActioner.make_action(stateData, action_order_sheet=action_order_sheet)
-    action_order_sheet = moveActionerList[idx].make_action(stateData, action_order_sheet=action_order_sheet)
-    print(action_order_sheet)
-    GameVariable = state.game_variables
-    player_count = 0
-
-
-    # for i in state.labels:
-    #     x, y, z = i.object_position_x, i.object_position_y, i.object_position_z
-    #     if (int(x)==int(GameVariable[0]))&(int(y)==int(GameVariable[1]))&(int(z)==int(GameVariable[2])):
-    #         print("it is self-player")
-        # gx, gy, gz = GameVariable.POSITION_X, GameVariable.POSITION_Y, GameVariable.POSITION_Z
-        # print(x,gx, '  ', y,gy, '  ', z,gz)
-        # print(i.object_name, i.object_id, i.x, i.y, i.width, i.height)
-        # if i.name == 'DoomPlayer':
-        #     print(i.name, i.id, i.position_x, i.position_y)
-            # player_count += 1
-    # print(player_count)
-    if myDoomFSM.ICanShoot():
-        game.make_action(myDoomFSM.getAction())
-    else:
-        game.make_action(make_into_doom_action(action_order_sheet))
-
-    if moveActionerList[idx].is_finished(stateData):
-        idx = (idx + 1) % len(moveActionerList)
+    game.make_action(myDoomFSM.getAction())
+    # print(myDoomFSM.getAction())
 
     if keyboard.is_pressed("Enter"):    
         print(myDoomFSM.getLocation())
@@ -204,5 +168,7 @@ while not game.is_episode_finished():
         print("Player " + str(player_number) + " died.")
         # Use this to respawn immediately after death, new state will be available.
         game.respawn_player()
+        myDoomFSM.ResetFSM()
+
 
 game.close()

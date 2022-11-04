@@ -30,7 +30,7 @@ game.add_game_args("-host 2 "
                    "+sv_respawnprotect 1 "    # Players will be invulnerable for two second after spawning.
                    "+sv_spawnfarthest 1 "     # Players will be spawned as far as possible from any other players.
                    "+sv_nocrouch 1 "          # Disables crouching.
-                   "+viz_respawn_delay 1 "   # Sets delay between respawns (in seconds, default is 0).
+                   "+viz_respawn_delay 2 "   # Sets delay between respawns (in seconds, default is 0).
                    "+viz_nocheat 0")          # Disables depth and labels buffer and the ability to use commands that could interfere with multiplayer game.
 
 # This can be used to host game without taking part in it (can be simply added as argument of vizdoom executable).
