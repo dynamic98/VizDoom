@@ -11,7 +11,8 @@ import vizdoom as vzd
 game = vzd.DoomGame()
 
 # Use CIG example config or your own.
-scenarios_path = 'C:\\Users\\sci2019\\Game_Project\\VizDoom\\scenarios'
+# scenarios_path = 'C:\\Users\\sci2019\\Game_Project\\VizDoom\\scenarios'
+scenarios_path = '../../../scenarios'
 game.load_config(os.path.join(scenarios_path, "deathmatch_multi.cfg"))
 
 game.set_doom_map("map01")  # Limited deathmatch.
