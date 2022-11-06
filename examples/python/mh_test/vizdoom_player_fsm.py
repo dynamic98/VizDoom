@@ -20,9 +20,10 @@ class Doom_FSM():
         self.move_finished = True
         self.roam_finished = False
         self.now_sector = 'center'
+        self.prev_sector = 'center'
         self.play_style = playstyle
         self.PlayerStyle()
-        self.fov = 40
+        self.fov = 30
         self.idx = 0
         self.idx2 = 0
         # self.idx = choice(list(range(0,8)))
@@ -53,16 +54,23 @@ class Doom_FSM():
                 self.Shot()
             # LeftAmmo = self.plazma
             if self.weapon!=6.0:
-                print('Low Ammo', self.idx2)
+                # Low AMMO
+                self.now_sector = 'weapon'
+                self.ResetIdx2()
+
                 if self.idx%2>0:
                     sector_list = [self.section_topright, self.section_topleft]
                 else:
                     sector_list = [self.section_bottomleft, self.section_bottomright]
+
                 idx = self.idx2%(len(sector_list))
                 self.MoveSector(sector_list[idx])
 
             elif self.health < self.Threshold_health:
-                print("Low Health", self.idx2)
+                # Low Health
+                self.now_sector = 'health'
+                self.ResetIdx2()
+               
                 if self.idx%2>0:
                     sector_list = [self.section_righttop, self.section_rightbottom]
                 else:
@@ -71,11 +79,15 @@ class Doom_FSM():
                 self.MoveSector(sector_list[idx])
 
             else:
-                print("Fine", self.idx2)
+                self.ResetIdx2()
+                # Fine
                 self.idx+=1
                 sector_list = [ self.section_centertop, self.section_centerleft, self.section_centerbottom, self.section_centerright]
                 idx = self.idx2%(len(sector_list))
                 self.MoveSector(sector_list[idx])
+            
+            self.prev_sector = self.now_sector
+            
 
    #############################################################                     
         elif self.play_style == 'runner':
@@ -83,7 +95,7 @@ class Doom_FSM():
             if self.ICanShoot():
                 self.Shot()
             sector_list = [self.section_topright, self.section_topleft, self.section_centertop, self.section_centerleft, self.section_centerbottom, self.section_centerright,
-            self.section_lefttop, self.section_leftbottom, self. section_centerbottom, self.section_bottomleft, self.section_bottomright,
+            self.section_lefttop, self.section_leftbottom, self.section_centerbottom, self.section_bottomleft, self.section_bottomright,
             self.section_centerright, self.section_rightbottom, self.section_righttop, self.section_centertop]
             idx = self.idx2%(len(sector_list))
             self.MoveSector(sector_list[idx])
@@ -95,6 +107,28 @@ class Doom_FSM():
             self.autoAim('super')
             if self.ICanShoot():
                 self.Shot()
+            sector_list = [self.section_topright, self.section_topleft, 
+                        self.section_centertop, self.section_centerleft, self.section_centerbottom, self.section_centerright,
+                        self.section_bottomleft, self.section_bottomright,
+                        self.section_centerright, self.section_centertop, self.section_centerleft, self.section_centerbottom]
+            idx = self.idx2%(len(sector_list))
+            self.MoveSector(sector_list[idx])
+
+
+        elif self.play_style == 'defender':
+            self.autoAim('super')
+            if self.ICanShoot():
+                self.Shot()
+            sector_list = [self.section_topright, self.section_topleft, 
+                        self.section_lefttop, self.section_leftbottom, self.section_lefttop, self.section_leftbottom,
+                        self.section_lefttop, self.section_leftbottom, self.section_lefttop, self.section_leftbottom,
+                        self.section_lefttop, self.section_leftbottom, self.section_lefttop, self.section_leftbottom,
+                        self.section_bottomleft, self.section_bottomright,
+                        self.section_rightbottom, self.section_righttop, self.section_rightbottom, self.section_righttop,
+                        self.section_rightbottom, self.section_righttop, self.section_rightbottom, self.section_righttop,
+                        self.section_rightbottom, self.section_righttop, self.section_rightbottom, self.section_righttop]
+            idx = self.idx2%(len(sector_list))
+            self.MoveSector(sector_list[idx])
 
 
     def getAction(self):
@@ -300,6 +334,10 @@ class Doom_FSM():
         for key in action_dict.keys():
             action[key] = action_dict[key]
         return action
+
+    def ResetIdx2(self):
+        if self.now_sector!=self.prev_sector:
+            self.idx2 = 0
 
 
     def OptimalWeapon(self):

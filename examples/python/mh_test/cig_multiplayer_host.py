@@ -27,7 +27,7 @@ game.add_game_args("-host 2 "
                    "-deathmatch "             # Deathmatch rules are used for the game.
                    "+timelimit 10.0 "         # The game (episode) will end after this many minutes have elapsed.
                    "+sv_forcerespawn 1 "      # Players will respawn automatically after they die.
-                   "+sv_noautoaim 1 "         # Autoaim is disabled for all players.
+                   "+sv_noautoaim 0 "         # Autoaim is disabled for all players.
                    "+sv_respawnprotect 1 "    # Players will be invulnerable for two second after spawning.
                    "+sv_spawnfarthest 1 "     # Players will be spawned as far as possible from any other players.
                    "+sv_nocrouch 1 "          # Disables crouching.

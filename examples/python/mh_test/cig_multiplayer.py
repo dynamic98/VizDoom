@@ -102,7 +102,7 @@ game.add_game_args("+name AI +colorset 0")
 game.set_mode(vzd.Mode.ASYNC_PLAYER)
 # game.set_mode(vzd.Mode.ASYNC_SPECTATOR)
 
-# game.set_window_visible(False)
+game.set_window_visible(False)
 
 game.set_objects_info_enabled(True)
 game.set_sectors_info_enabled(True)
@@ -125,14 +125,14 @@ game.add_available_game_variable(vzd.GameVariable.AMMO6)
 actions = [[True, False, False], [False, True, False], [False, False, True]]
 
 game.init()
-myDoomFSM = Doom_FSM(game, playstyle='aggressive')
+myDoomFSM = Doom_FSM(game, playstyle='defender')
 # Three example sample actions
 # actions = [[1,0,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0,0],[0,0,1,0,0,0,0,0,0]]
 
 # Get player's number
 player_number = int(game.get_game_variable(vzd.GameVariable.PLAYER_NUMBER))
 last_frags = 0
-
+die_count = 0
 # aimActioner = AimActioner(game)
 # attackActioner = AttackActioner(game)
 # moveActionerList = []
@@ -162,10 +162,16 @@ while not game.is_episode_finished():
     if frags != last_frags:
         last_frags = frags
         print("Player " + str(player_number) + " has " + str(frags) + " frags.")
+        # print(last_frags + ' kills and' + die_count + ' deaths')
+        print(str(frags) + ' kills and  ' + str(die_count) + ' deaths')
+
+
 
     # Check if player is dead
     if game.is_player_dead():
+        die_count+=1
         print("Player " + str(player_number) + " died.")
+        print(str(frags) + ' kills and  ' + str(die_count) + ' deaths')
         # Use this to respawn immediately after death, new state will be available.
         game.respawn_player()
         myDoomFSM.ResetFSM()
