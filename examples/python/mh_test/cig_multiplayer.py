@@ -102,7 +102,7 @@ game.add_game_args("+name AI +colorset 0")
 game.set_mode(vzd.Mode.ASYNC_PLAYER)
 # game.set_mode(vzd.Mode.ASYNC_SPECTATOR)
 
-game.set_window_visible(False)
+# game.set_window_visible(False)
 
 game.set_objects_info_enabled(True)
 game.set_sectors_info_enabled(True)
@@ -125,7 +125,7 @@ game.add_available_game_variable(vzd.GameVariable.AMMO6)
 actions = [[True, False, False], [False, True, False], [False, False, True]]
 
 game.init()
-myDoomFSM = Doom_FSM(game, playstyle='defender')
+myDoomFSM = Doom_FSM(game, playstyle='aggressive')
 # Three example sample actions
 # actions = [[1,0,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0,0],[0,0,1,0,0,0,0,0,0]]
 

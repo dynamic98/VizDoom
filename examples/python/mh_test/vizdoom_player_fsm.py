@@ -26,6 +26,7 @@ class Doom_FSM():
         self.fov = 30
         self.idx = 0
         self.idx2 = 0
+        self.priorswith = 0
         # self.idx = choice(list(range(0,8)))
         self.SetSectorClass()
 
@@ -46,10 +47,31 @@ class Doom_FSM():
         self.ResetAction()
         self.OptimalWeapon() # plazma > shotgun > rocket > else
         self.OptimalAction()
+        self.SwitchPrior()
+    
+    def SwitchPrior(self):
+        if self.priorswith == 0:
+            self.priorswith = 1
+        else:
+            self.priorswith = 0
+
 
     def OptimalAction(self):
         if self.play_style == 'aggressive':
-            self.autoAim('super')
+            if self.ICanShoot():
+                self.Shot()
+            
+            if self.priorswith == 0:
+                self.autoAim('super')
+                self.HumanLikeBehavior()
+            elif self.priorswith == 1:
+                self.HumanLikeBehavior()
+                self.autoAim('super')
+            # LeftAmmo = self.plazma
+
+            
+   #############################################################  
+        elif self.play_style == 'defensive':
             if self.ICanShoot():
                 self.Shot()
             # LeftAmmo = self.plazma
@@ -70,7 +92,7 @@ class Doom_FSM():
                 # Low Health
                 self.now_sector = 'health'
                 self.ResetIdx2()
-               
+                
                 if self.idx%2>0:
                     sector_list = [self.section_righttop, self.section_rightbottom]
                 else:
@@ -84,12 +106,12 @@ class Doom_FSM():
                 self.idx+=1
                 sector_list = [ self.section_centertop, self.section_centerleft, self.section_centerbottom, self.section_centerright]
                 idx = self.idx2%(len(sector_list))
+                self.autoAim('super')                   
                 self.MoveSector(sector_list[idx])
-            
-            self.prev_sector = self.now_sector
-            
 
-   #############################################################                     
+            self.prev_sector = self.now_sector
+
+ #############################################       
         elif self.play_style == 'runner':
             self.autoAim('super')
             if self.ICanShoot():
@@ -109,13 +131,19 @@ class Doom_FSM():
                 self.Shot()
             sector_list = [self.section_topright, self.section_topleft, 
                         self.section_centertop, self.section_centerleft, self.section_centerbottom, self.section_centerright,
+                        self.section_centertop, self.section_centerleft, self.section_centerbottom, self.section_centerright,
+                        self.section_centertop, self.section_centerleft, self.section_centerbottom, self.section_centerright,
+                        self.section_centertop, self.section_centerleft, self.section_centerbottom, self.section_centerright,
                         self.section_bottomleft, self.section_bottomright,
+                        self.section_centerright, self.section_centertop, self.section_centerleft, self.section_centerbottom,
+                        self.section_centerright, self.section_centertop, self.section_centerleft, self.section_centerbottom,
+                        self.section_centerright, self.section_centertop, self.section_centerleft, self.section_centerbottom,
                         self.section_centerright, self.section_centertop, self.section_centerleft, self.section_centerbottom]
             idx = self.idx2%(len(sector_list))
             self.MoveSector(sector_list[idx])
 
 
-        elif self.play_style == 'defender':
+        elif self.play_style == 'hider':
             self.autoAim('super')
             if self.ICanShoot():
                 self.Shot()
@@ -138,15 +166,52 @@ class Doom_FSM():
 
     def PlayerStyle(self):
         if self.play_style == 'aggressive':
-            self.Threshold_health = 70
+            self.Threshold_health = 40
             self.Threshold_AMMO = 30
 
         elif self.play_style == 'defensive':
-            self.Threshold_health = 70
-            self.Threshold_AMMO = 20
+            self.Threshold_health = 80
+            self.Threshold_AMMO = 80
+
         elif self.play_style == 'runner':
             self.Threshold_health = 70
             self.Threshold_AMMO = 20
+
+    def HumanLikeBehavior(self):
+        if self.weapon!=6.0:
+            # Low AMMO
+            self.now_sector = 'weapon'
+            self.ResetIdx2()
+
+            if self.idx%2>0:
+                sector_list = [self.section_topright, self.section_topleft]
+            else:
+                sector_list = [self.section_bottomleft, self.section_bottomright]
+
+            idx = self.idx2%(len(sector_list))
+            self.MoveSector(sector_list[idx])
+
+        elif self.health < self.Threshold_health:
+            # Low Health
+            self.now_sector = 'health'
+            self.ResetIdx2()
+            
+            if self.idx%2>0:
+                sector_list = [self.section_righttop, self.section_rightbottom]
+            else:
+                sector_list = [self.section_leftbottom, self.section_lefttop]
+            idx = self.idx2%(len(sector_list))
+            self.MoveSector(sector_list[idx])
+
+        else:
+            self.ResetIdx2()
+            # Fine
+            self.idx+=1
+            sector_list = [ self.section_centertop, self.section_centerleft, self.section_centerbottom, self.section_centerright]
+            idx = self.idx2%(len(sector_list))
+            self.MoveSector(sector_list[idx])
+
+        self.prev_sector = self.now_sector
 
 
     def checkMyState(self):
@@ -337,6 +402,7 @@ class Doom_FSM():
 
     def ResetIdx2(self):
         if self.now_sector!=self.prev_sector:
+            print(self.now_sector)
             self.idx2 = 0
 
 
@@ -364,12 +430,22 @@ class Doom_FSM():
                 rotate += 360
 
             if rotate > 180:
+                # rotate = 360-rotate
                 self.action[PlayerAction.TurnLeft]=True
-                self.action[PlayerAction.Run]=False
+                self.action[PlayerAction.Run]=True
+                if rotate-180<5:
+                    self.action[PlayerAction.TurnLeft]=False
+                    self.action[PlayerAction.Run]=False
+                    self.action[PlayerAction.rotateX] = -25
 
             else:
                 self.action[PlayerAction.TurnRight]=True
-                self.action[PlayerAction.Run]=False
+                self.action[PlayerAction.Run]=True
+                if 180-rotate<5:
+                    self.action[PlayerAction.TurnLeft]=False
+                    self.action[PlayerAction.Run]=False
+                    self.action[PlayerAction.rotateX] = 25
+
 
         else:
             self.action[PlayerAction.TurnLeft]=True
@@ -395,12 +471,21 @@ class Doom_FSM():
                                 rotate += 360
 
                             if rotate > 180:
+                                # rotate = 360-rotate
                                 self.action[PlayerAction.TurnLeft]=True
-                                self.action[PlayerAction.Run]=False
+                                self.action[PlayerAction.Run]=True
+                                if rotate-180<5:
+                                    self.action[PlayerAction.TurnLeft]=False
+                                    self.action[PlayerAction.Run]=False
+                                    self.action[PlayerAction.rotateX] = -25
 
                             else:
                                 self.action[PlayerAction.TurnRight]=True
-                                self.action[PlayerAction.Run]=False
+                                self.action[PlayerAction.Run]=True
+                                if 180-rotate<5:
+                                    self.action[PlayerAction.TurnLeft]=False
+                                    self.action[PlayerAction.Run]=False
+                                    self.action[PlayerAction.rotateX] = 25
 
                         else:
                             self.action[PlayerAction.TurnLeft]=True
@@ -428,12 +513,21 @@ class Doom_FSM():
                                 rotate += 360
 
                             if rotate > 180:
+                                # rotate = 360-rotate
                                 self.action[PlayerAction.TurnLeft]=True
-                                self.action[PlayerAction.Run]=False
+                                self.action[PlayerAction.Run]=True
+                                if rotate-180<5:
+                                    self.action[PlayerAction.TurnLeft]=False
+                                    self.action[PlayerAction.Run]=False
+                                    self.action[PlayerAction.rotateX] = -25
 
                             else:
                                 self.action[PlayerAction.TurnRight]=True
-                                self.action[PlayerAction.Run]=False
+                                self.action[PlayerAction.Run]=True
+                                if 180-rotate<5:
+                                    self.action[PlayerAction.TurnLeft]=False
+                                    self.action[PlayerAction.Run]=False
+                                    self.action[PlayerAction.rotateX] = 25
 
                         else:
                             self.action[PlayerAction.TurnLeft]=True
